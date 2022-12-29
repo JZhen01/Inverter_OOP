@@ -10,7 +10,9 @@ VAR
 		(*Button*)
 	btStartHoming		: BOOL;
 	btStartPositioning	: BOOL;
-	
+	btStartJogging		: BOOL;
+	btJogLeft			: BOOL;
+	btJogRight			: BOOL;
 		(*Set*)
 	rHighSpeedHzValue	: REAL;
 	rLowSpeedHzValue	: REAL;
@@ -40,7 +42,7 @@ IF fbArm.Positioning(btStartPositioning, rTargetAxis) THEN
 	btStartPositioning := FALSE;
 END_IF
 
-
+fbArm.Jogging(btStartJogging, btJogLeft, btJogRight);
 ]]></ST>
     </Implementation>
     <LineIds Name="FB_Machine">

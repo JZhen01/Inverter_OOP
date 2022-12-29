@@ -13,7 +13,7 @@
 		</System>
 		<Plc>
 			<Project GUID="{77DFC931-7029-4931-9B81-277B05DC4678}" Name="MachineA" PrjFilePath="MachineA\MachineA.plcproj" TmcFilePath="MachineA\MachineA.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="MachineA\MachineA.tmc" TmcHash="{2DB0AD2E-F7FF-B124-2CC9-1F363FDD6FFE}">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="MachineA\MachineA.tmc" TmcHash="{9F476652-1DF6-2D34-017C-83D0E09EF3E3}">
 					<Name>MachineA Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="1">
@@ -67,19 +67,17 @@
 				</Instance>
 			</Project>
 			<Project GUID="{4769C26A-2D56-48C6-9639-18F199A5E065}" Name="Simulator" PrjFilePath="Simulator\Simulator.plcproj" TmcFilePath="Simulator\Simulator.tmc" ReloadTmc="true" AmsPort="852" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502040" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="Simulator\Simulator.tmc" TmcHash="{B6216019-6C19-79D6-1AA1-2D0815707147}">
+				<Instance Id="#x08502040" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="Simulator\Simulator.tmc" TmcHash="{91DFFC74-4CA0-7F07-23C4-041C7FBE111D}">
 					<Name>Simulator Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="1">
 						<Name>PlcTask Inputs</Name>
 						<Var>
 							<Name>MAIN.bClockwise</Name>
-							<Comment><![CDATA[rAxisSV					AT %I* : REAL;]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
 							<Name>MAIN.rAnalogSV</Name>
-							<Comment><![CDATA[rAnalogPV				AT %Q* : REAL;]]></Comment>
 							<Type>REAL</Type>
 						</Var>
 						<Var>
@@ -123,8 +121,10 @@
 				</Instance>
 			</Project>
 		</Plc>
+		<Io/>
 	</Project>
 	<Mappings>
+		<MappingInfo Identifier="{08502001-2041-0850-0020-500840205008}" Id="#x02030010" Watchdog="04000000040000000400000004000000"/>
 		<OwnerA Name="TIPC^MachineA^MachineA Instance">
 			<OwnerB Name="TIPC^Simulator^Simulator Instance">
 				<Link VarA="PlcTask Inputs^MAIN.fbMachine.fbArm.fbFrontSensor.bDetect" VarB="PlcTask Outputs^MAIN.bFrontSensor"/>

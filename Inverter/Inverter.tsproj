@@ -13,7 +13,7 @@
 		</System>
 		<Plc>
 			<Project GUID="{77DFC931-7029-4931-9B81-277B05DC4678}" Name="MachineA" PrjFilePath="MachineA\MachineA.plcproj" TmcFilePath="MachineA\MachineA.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="MachineA\MachineA.tmc" TmcHash="{8B71ACE9-8788-5728-A773-E14A3A4BF747}">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="MachineA\MachineA.tmc" TmcHash="{8A5E47C7-34F8-F2F9-C7B5-F0B3B0ED8892}">
 					<Name>MachineA Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="1">
@@ -67,19 +67,17 @@
 				</Instance>
 			</Project>
 			<Project GUID="{4769C26A-2D56-48C6-9639-18F199A5E065}" Name="Simulator" PrjFilePath="Simulator\Simulator.plcproj" TmcFilePath="Simulator\Simulator.tmc" ReloadTmc="true" AmsPort="852" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502040" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="Simulator\Simulator.tmc" TmcHash="{B6216019-6C19-79D6-1AA1-2D0815707147}">
+				<Instance Id="#x08502040" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="Simulator\Simulator.tmc" TmcHash="{91DFFC74-4CA0-7F07-23C4-041C7FBE111D}">
 					<Name>Simulator Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="1">
 						<Name>PlcTask Inputs</Name>
 						<Var>
 							<Name>MAIN.bClockwise</Name>
-							<Comment><![CDATA[rAxisSV					AT %I* : REAL;]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
 							<Name>MAIN.rAnalogSV</Name>
-							<Comment><![CDATA[rAnalogPV				AT %Q* : REAL;]]></Comment>
 							<Type>REAL</Type>
 						</Var>
 						<Var>
