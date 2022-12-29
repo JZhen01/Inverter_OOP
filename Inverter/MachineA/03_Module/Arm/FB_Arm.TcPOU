@@ -35,33 +35,14 @@ END_VAR
       <Folder Name="Private" Id="{cc660ee9-9210-48e9-81f8-4c763841ef9b}" />
     </Folder>
     <Folder Name="Properties" Id="{eab42068-3e20-4616-973f-4bb1dacbffc5}" />
-    <Property Name="Analog" Id="{ca852011-561e-4657-91a4-0c027aeac2e5}" FolderPath="Properties\">
-      <Declaration><![CDATA[PROPERTY Analog : REAL]]></Declaration>
-      <Get Name="Get" Id="{e4b3093d-cccf-4ba9-891b-2ccdcef3d138}">
-        <Declaration><![CDATA[VAR
-END_VAR
-]]></Declaration>
-        <Implementation>
-          <ST><![CDATA[]]></ST>
-        </Implementation>
-      </Get>
-      <Set Name="Set" Id="{0c92ea24-5c3c-45cd-9a02-d954d928d297}">
-        <Declaration><![CDATA[VAR
-END_VAR
-]]></Declaration>
-        <Implementation>
-          <ST><![CDATA[]]></ST>
-        </Implementation>
-      </Set>
-    </Property>
-    <Property Name="DelayTimer" Id="{65534ff0-e573-4088-b8c8-3bb4c9fcfef0}" FolderPath="Properties\">
-      <Declaration><![CDATA[PROPERTY DelayTimer : TIME]]></Declaration>
+    <Property Name="DelayTime" Id="{65534ff0-e573-4088-b8c8-3bb4c9fcfef0}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY DelayTime : TIME]]></Declaration>
       <Get Name="Get" Id="{9c44c068-a78d-4720-804f-37b3c6acbb6a}">
         <Declaration><![CDATA[VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[]]></ST>
+          <ST><![CDATA[DelayTime := tDelayTime;]]></ST>
         </Implementation>
       </Get>
       <Set Name="Set" Id="{d1ec60f5-f1c0-41de-ac22-4ae6939a8cc2}">
@@ -69,7 +50,7 @@ END_VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[]]></ST>
+          <ST><![CDATA[tDelayTime := DelayTime;]]></ST>
         </Implementation>
       </Set>
     </Property>
@@ -80,7 +61,7 @@ END_VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[]]></ST>
+          <ST><![CDATA[HighSpeedHz := rHighSpeedHz;]]></ST>
         </Implementation>
       </Get>
       <Set Name="Set" Id="{2d753281-ce35-4145-9d35-b90edce28f3e}">
@@ -88,7 +69,7 @@ END_VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[]]></ST>
+          <ST><![CDATA[rHighSpeedHz := HighSpeedHz;]]></ST>
         </Implementation>
       </Set>
     </Property>
@@ -209,7 +190,7 @@ END_CASE]]></ST>
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[]]></ST>
+          <ST><![CDATA[HzToRawRatio := rHzToRawRatio;]]></ST>
         </Implementation>
       </Get>
       <Set Name="Set" Id="{130a199e-d87e-49c2-a088-74e75792c763}">
@@ -217,7 +198,7 @@ END_VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[]]></ST>
+          <ST><![CDATA[rHzToRawRatio := HzToRawRatio;]]></ST>
         </Implementation>
       </Set>
     </Property>
@@ -240,7 +221,7 @@ END_VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[]]></ST>
+          <ST><![CDATA[LowSpeedHz := rLowSpeedHz;]]></ST>
         </Implementation>
       </Get>
       <Set Name="Set" Id="{22a34560-5dd3-433a-a623-facfe6f59786}">
@@ -248,7 +229,7 @@ END_VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[]]></ST>
+          <ST><![CDATA[rLowSpeedHz := LowSpeedHz;]]></ST>
         </Implementation>
       </Set>
     </Property>
@@ -308,16 +289,10 @@ END_VAR
     <LineIds Name="FB_Arm">
       <LineId Id="9" Count="0" />
     </LineIds>
-    <LineIds Name="FB_Arm.Analog.Get">
+    <LineIds Name="FB_Arm.DelayTime.Get">
       <LineId Id="2" Count="0" />
     </LineIds>
-    <LineIds Name="FB_Arm.Analog.Set">
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_Arm.DelayTimer.Get">
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_Arm.DelayTimer.Set">
+    <LineIds Name="FB_Arm.DelayTime.Set">
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="FB_Arm.HighSpeedHz.Get">

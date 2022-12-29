@@ -7,15 +7,24 @@ VAR
 	
 	(*Button*)
 	btStartHoming		: BOOL;
+	rHighSpeedHzValue	: REAL;
+	rLowSpeedHzValue	: REAL;
+	rHzToRawRatioValue	: REAL;
+	tDelayTimeValue		: TIME;
 END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[fbArm.Homing(btStartHoming);
-fbArm.Analog := 1;]]></ST>
+fbArm.HighSpeedHz := rHighSpeedHzValue;
+fbArm.LowSpeedHz := rLowSpeedHzValue;
+fbArm.HzToRawRatio := rHzToRawRatioValue;
+fbArm.DelayTime := tDelayTimeValue;]]></ST>
     </Implementation>
     <LineIds Name="FB_Machine">
-      <LineId Id="9" Count="0" />
-      <LineId Id="17" Count="0" />
+      <LineId Id="26" Count="0" />
+      <LineId Id="28" Count="1" />
+      <LineId Id="27" Count="0" />
+      <LineId Id="25" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>
