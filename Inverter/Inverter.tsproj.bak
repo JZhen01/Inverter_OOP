@@ -13,7 +13,7 @@
 		</System>
 		<Plc>
 			<Project GUID="{77DFC931-7029-4931-9B81-277B05DC4678}" Name="MachineA" PrjFilePath="MachineA\MachineA.plcproj" TmcFilePath="MachineA\MachineA.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="MachineA\MachineA.tmc" TmcHash="{DCE33CB5-8A27-DAB7-2F7B-434C277BEAF1}">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="MachineA\MachineA.tmc" TmcHash="{2DB0AD2E-F7FF-B124-2CC9-1F363FDD6FFE}">
 					<Name>MachineA Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="1">
@@ -39,10 +39,6 @@
 						<Name>PlcTask Outputs</Name>
 						<Var>
 							<Name>MAIN.fbMachine.fbArm.fbInverter.rAnalogSV</Name>
-							<Type>REAL</Type>
-						</Var>
-						<Var>
-							<Name>MAIN.fbMachine.fbArm.fbInverter.rAxisSV</Name>
 							<Type>REAL</Type>
 						</Var>
 						<Var>
@@ -127,10 +123,8 @@
 				</Instance>
 			</Project>
 		</Plc>
-		<Io/>
 	</Project>
 	<Mappings>
-		<MappingInfo Identifier="{08502001-2041-0850-0020-500840205008}" Id="#x02030010" Watchdog="04000000040000000400000004000000"/>
 		<OwnerA Name="TIPC^MachineA^MachineA Instance">
 			<OwnerB Name="TIPC^Simulator^Simulator Instance">
 				<Link VarA="PlcTask Inputs^MAIN.fbMachine.fbArm.fbFrontSensor.bDetect" VarB="PlcTask Outputs^MAIN.bFrontSensor"/>

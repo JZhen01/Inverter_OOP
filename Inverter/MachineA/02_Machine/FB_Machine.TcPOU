@@ -3,7 +3,7 @@
   <POU Name="FB_Machine" Id="{0762e580-feee-46d7-a51d-4d74e4f1fd72}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_Machine
 VAR
-	(*
+	
 	fbArm				: FB_Arm;
 	
 	(*Arm*)
@@ -20,16 +20,18 @@ VAR
 	rTargetAxis			: REAL;
 		(*Get*)
 	rCurAxis			: REAL;
-	*)
+	
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[(*
+      <ST><![CDATA[
 fbArm.HighSpeedHz := rHighSpeedHzValue;
 fbArm.LowSpeedHz := rLowSpeedHzValue;
 fbArm.HzToRawRatio := rHzToRawRatioValue;
 fbArm.DelayTime := tDelayTimeValue;
 
+rCurAxis := fbArm.Axis;
+
 IF fbArm.Homing(btStartHoming) THEN
 	btStartHoming := FALSE;
 END_IF
@@ -37,52 +39,18 @@ END_IF
 IF fbArm.Positioning(btStartPositioning, rTargetAxis) THEN
 	btStartPositioning := FALSE;
 END_IF
-*)
 
-Arm();]]></ST>
+
+]]></ST>
     </Implementation>
-    <Method Name="Arm" Id="{201e9079-63ff-4971-8703-b77b36014f8f}">
-      <Declaration><![CDATA[METHOD Arm : PVOID
-VAR
-	fbArm				: FB_Arm;
-	
-	(*Arm*)
-		(*Button*)
-	btStartHoming		: BOOL;
-	btStartPositioning	: BOOL;
-	
-		(*Set*)
-	rHighSpeedHzValue	: REAL;
-	rLowSpeedHzValue	: REAL;
-	rHzToRawRatioValue	: REAL;
-	tDelayTimeValue		: TIME;
-	
-	rTargetAxis			: REAL;
-		(*Get*)
-	rCurAxis			: REAL;
-END_VAR]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[fbArm.HighSpeedHz := rHighSpeedHzValue;
-fbArm.LowSpeedHz := rLowSpeedHzValue;
-fbArm.HzToRawRatio := rHzToRawRatioValue;
-fbArm.DelayTime := tDelayTimeValue;
-
-IF fbArm.Homing(btStartHoming) THEN
-	btStartHoming := FALSE;
-END_IF
-
-IF fbArm.Positioning(btStartPositioning, rTargetAxis) THEN
-	btStartPositioning := FALSE;
-END_IF
- ]]></ST>
-      </Implementation>
-    </Method>
     <LineIds Name="FB_Machine">
       <LineId Id="61" Count="0" />
       <LineId Id="66" Count="0" />
       <LineId Id="62" Count="1" />
       <LineId Id="60" Count="0" />
+      <LineId Id="71" Count="0" />
       <LineId Id="59" Count="0" />
+      <LineId Id="72" Count="0" />
       <LineId Id="26" Count="0" />
       <LineId Id="56" Count="1" />
       <LineId Id="52" Count="0" />
@@ -91,10 +59,6 @@ END_IF
       <LineId Id="53" Count="0" />
       <LineId Id="68" Count="0" />
       <LineId Id="67" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_Machine.Arm">
-      <LineId Id="6" Count="11" />
-      <LineId Id="5" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

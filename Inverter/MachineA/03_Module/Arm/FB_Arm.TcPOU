@@ -25,7 +25,6 @@ VAR
 	tDelayTime				: TIME;
 	
 	rAxisSV					: REAL;
-	rAxisPV					: REAL	:= fbInverter.Axis;
 	(*Others*)
 	fbTon					: TON;
 END_VAR
@@ -37,14 +36,14 @@ END_VAR
       <Folder Name="Private" Id="{cc660ee9-9210-48e9-81f8-4c763841ef9b}" />
     </Folder>
     <Folder Name="Properties" Id="{eab42068-3e20-4616-973f-4bb1dacbffc5}" />
-    <Property Name="Axis" Id="{ecbc6915-ad31-41c9-a66f-399ab579a352}" FolderPath="Properties\">
+    <Property Name="Axis" Id="{64ff3545-707f-4e4b-b08d-c107cf02b35b}" FolderPath="Properties\">
       <Declaration><![CDATA[PROPERTY Axis : REAL]]></Declaration>
-      <Get Name="Get" Id="{777e36e1-29fe-4a23-8d61-57902032fcd6}">
+      <Get Name="Get" Id="{f44fe555-47e5-4a04-b024-43c6d001206a}">
         <Declaration><![CDATA[VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[Axis := rAxisPV;]]></ST>
+          <ST><![CDATA[Axis := fbInverter.Axis;]]></ST>
         </Implementation>
       </Get>
     </Property>
@@ -176,7 +175,7 @@ END_VAR
 		bBusy := FALSE;
 		bHoming := FALSE;
 		iHomingState := E_ArmState.Idle;
-		Homing := True;
+		Homing := TRUE;
 END_CASE]]></ST>
       </Implementation>
     </Method>
@@ -280,24 +279,25 @@ END_VAR
 			fbTon(IN:= TRUE, PT:= tDelayTime);
 			IF fbTon.Q THEN
 				fbTon(IN:= FALSE);
+				bInverseDirection := NOT bInverseDirection;
 				iPositioningState := E_ArmState.Inverse;
 			END_IF
 		ELSE
 			IF REAL_TO_INT(fbInverter.Axis) < REAL_TO_INT(TargetAxis) THEN
-				IF (TargetAxis - fbInverter.Axis) > 10 THEN
+				IF (TargetAxis - fbInverter.Axis) > 5 THEN
 					fbInverter.Analog := (rHzToRawRatio*rHighSpeedHz);
 				ELSE
-					fbInverter.Analog := (rHzToRawRatio*rHighSpeedHz);
-				END_IF
-				MoveLeft();
-				
-			ELSIF REAL_TO_INT(fbInverter.Axis) > REAL_TO_INT(TargetAxis) THEN
-				IF (fbInverter.Axis - TargetAxis) > 10 THEN
-					fbInverter.Analog := (rHzToRawRatio*rHighSpeedHz);
-				ELSE
-					fbInverter.Analog := (rHzToRawRatio*rHighSpeedHz);
+					fbInverter.Analog := (rHzToRawRatio*rLowSpeedHz);
 				END_IF
 				MoveRight();
+				
+			ELSIF REAL_TO_INT(fbInverter.Axis) > REAL_TO_INT(TargetAxis) THEN
+				IF (fbInverter.Axis - TargetAxis) > 5 THEN
+					fbInverter.Analog := (rHzToRawRatio*rHighSpeedHz);
+				ELSE
+					fbInverter.Analog := (rHzToRawRatio*rLowSpeedHz);
+				END_IF
+				MoveLeft();
 			
 			ELSE
 				MoveStop();
@@ -310,10 +310,12 @@ END_VAR
 			END_IF
 		END_IF
 		
-	E_ArmState.Inverse:
-		MoveLeft();
-		
-		IF fbHomeSensor.Detect THEN
+	E_ArmState.SecondState:
+		IF fbFrontSensor.Detect THEN
+			MoveRight();
+		ELSIF fbRearSensor.Detect THEN
+			MoveLeft();
+		ELSE
 			MoveStop();
 			fbTon(IN:= TRUE, PT:= tDelayTime);
 			IF fbTon.Q THEN
@@ -402,7 +404,9 @@ END_CASE
       <LineId Id="34" Count="1" />
       <LineId Id="46" Count="0" />
       <LineId Id="48" Count="0" />
-      <LineId Id="50" Count="3" />
+      <LineId Id="50" Count="2" />
+      <LineId Id="108" Count="0" />
+      <LineId Id="53" Count="0" />
       <LineId Id="49" Count="0" />
       <LineId Id="58" Count="0" />
       <LineId Id="65" Count="6" />
@@ -417,8 +421,12 @@ END_CASE
       <LineId Id="47" Count="0" />
       <LineId Id="93" Count="0" />
       <LineId Id="36" Count="0" />
-      <LineId Id="95" Count="8" />
       <LineId Id="39" Count="0" />
+      <LineId Id="109" Count="0" />
+      <LineId Id="111" Count="3" />
+      <LineId Id="116" Count="3" />
+      <LineId Id="115" Count="0" />
+      <LineId Id="110" Count="0" />
       <LineId Id="94" Count="0" />
       <LineId Id="40" Count="0" />
       <LineId Id="104" Count="1" />
