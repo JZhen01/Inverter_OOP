@@ -1,0 +1,387 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="FB_Arm" Id="{fa09fdde-421e-4e4d-aa8e-c1ef0121c5a9}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_Arm
+VAR
+	fbInverter				: FB_Inverter;
+	fbFrontSensor			: FB_Sensor;
+	fbHomeSensor			: FB_Sensor;
+	fbRearSensor			: FB_Sensor;
+	
+	(*Arm State*)
+	bBusy					: BOOL;
+	bHoming					: BOOL;
+		iHomingState		: INT;
+	bJogging				: BOOL;
+	bPositioning			: BOOL;
+	bInverseDirection		: BOOL;
+	
+	(*Parameter*)
+	rHighSpeedHz			: REAL;
+	rLowSpeedHz				: REAL;
+	rHzToRawRatio			: REAL;
+	rAnalog					: REAL;
+	tDelayTime				: TIME;
+	
+	(*Others*)
+	fbTon					: TON;
+	
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Folder Name="Methods" Id="{90984db3-8fca-4e8d-a74b-ba669e5a0e15}">
+      <Folder Name="Private" Id="{cc660ee9-9210-48e9-81f8-4c763841ef9b}" />
+    </Folder>
+    <Folder Name="Properties" Id="{eab42068-3e20-4616-973f-4bb1dacbffc5}" />
+    <Property Name="Analog" Id="{ca852011-561e-4657-91a4-0c027aeac2e5}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY Analog : REAL]]></Declaration>
+      <Get Name="Get" Id="{e4b3093d-cccf-4ba9-891b-2ccdcef3d138}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{0c92ea24-5c3c-45cd-9a02-d954d928d297}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="DelayTimer" Id="{65534ff0-e573-4088-b8c8-3bb4c9fcfef0}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY DelayTimer : TIME]]></Declaration>
+      <Get Name="Get" Id="{9c44c068-a78d-4720-804f-37b3c6acbb6a}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{d1ec60f5-f1c0-41de-ac22-4ae6939a8cc2}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="HighSpeedHz" Id="{76e6d411-69cc-4e13-9c8c-2f07edbc1f2c}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY HighSpeedHz : REAL]]></Declaration>
+      <Get Name="Get" Id="{4d736c52-7cf6-47d7-90e7-32a1fd10f737}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{2d753281-ce35-4145-9d35-b90edce28f3e}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Method Name="Homing" Id="{ee1750a1-5645-423e-accb-f0bf74ca5075}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD Homing : BOOL
+VAR_INPUT
+	StartButton				: BOOL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[CASE iHomingState OF
+	E_HomingState.Idle:
+		IF StartButton AND NOT bHoming AND NOT bBusy AND NOT fbHomeSensor.Detect THEN
+			bBusy := TRUE;
+			bHoming := TRUE;
+			
+			iHomingState := E_HomingState.FirstHoming;
+			
+		ELSIF StartButton AND fbHomeSensor.Detect THEN
+			iHomingState := E_HomingState.Done;
+		END_IF
+	
+	E_HomingState.FirstHoming:
+			fbInverter.Analog := (rHzToRawRatio*rHighSpeedHz);
+		MoveLeft();
+		
+		IF fbHomeSensor.Detect THEN
+			MoveStop();
+			
+			fbTon(IN:= TRUE, PT:= tDelayTime);
+			IF fbTon.Q THEN
+				fbTon(IN:= FALSE);
+				iHomingState := E_HomingState.Re;
+			END_IF
+			
+		ELSIF fbFrontSensor.Detect THEN
+			MoveStop();
+			
+			fbTon(IN:= TRUE, PT:= tDelayTime);
+			IF fbTon.Q THEN
+				fbTon(IN:= FALSE);
+				iHomingState := E_HomingState.Reverse;
+			END_IF
+			
+		ELSIF fbRearSensor.Detect THEN
+			MoveStop();
+			
+			fbTon(IN:= TRUE, PT:= tDelayTime);
+			IF fbTon.Q THEN
+				fbTon(IN:= FALSE);
+				bInverseDirection := NOT bInverseDirection;
+				iHomingState := E_HomingState.Inverse;
+			END_IF
+		END_IF
+	
+	E_HomingState.Reverse:
+		MoveRight();
+		
+		IF fbHomeSensor.Detect THEN
+			MoveStop();
+			fbTon(IN:= TRUE, PT:= tDelayTime);
+			IF fbTon.Q THEN
+				fbTon(IN:= FALSE);
+				iHomingState := E_HomingState.Re;
+			END_IF
+		END_IF
+	
+	E_HomingState.Inverse:
+		MoveLeft();
+		
+		IF fbHomeSensor.Detect THEN
+			MoveStop();
+			fbTon(IN:= TRUE, PT:= tDelayTime);
+			IF fbTon.Q THEN
+				fbTon(IN:= FALSE);
+				iHomingState := E_HomingState.Re;
+			END_IF
+		END_IF
+	
+	E_HomingState.Re:
+		fbInverter.Analog := (rHzToRawRatio*rLowSpeedHz);
+		MoveLeft();
+		
+		IF NOT fbHomeSensor.Detect THEN
+			MoveStop();
+			fbTon(IN:= TRUE, PT:= tDelayTime);
+			IF fbTon.Q THEN
+				fbTon(IN:= FALSE);
+				iHomingState := E_HomingState.SecondHoming;
+			END_IF
+		END_IF
+	
+	E_HomingState.SecondHoming:
+		fbInverter.Analog := (rHzToRawRatio*rLowSpeedHz);
+		MoveRight();
+		IF fbHomeSensor.Detect THEN
+			MoveStop();
+			
+			fbTon(IN:= TRUE, PT:= tDelayTime);
+			IF fbTon.Q THEN
+				fbTon(IN:= FALSE);
+				iHomingState := E_HomingState.Done;
+			END_IF
+		END_IF
+	
+	E_HomingState.Done:
+		bBusy := FALSE;
+		bHoming := FALSE;
+		iHomingState := E_HomingState.Idle;
+	
+END_CASE]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="HzToRawRatio" Id="{5fcb0c32-f4a1-4b6f-b712-f9a3e64d0464}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY HzToRawRatio : REAL]]></Declaration>
+      <Get Name="Get" Id="{f031419e-f86a-4490-b3ae-25bdbfcfc6ad}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{130a199e-d87e-49c2-a088-74e75792c763}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Method Name="Jogging" Id="{cabc3749-1d71-4d0c-977a-cb8d235cb81a}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD Jogging : BOOL
+VAR_INPUT
+	StartButton				: BOOL;
+	MoveLeftButton			: BOOL;
+	MoveRightButton			: BOOL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="LowSpeedHz" Id="{725f885a-59ca-404c-885d-76b160c47f3a}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY LowSpeedHz : REAL]]></Declaration>
+      <Get Name="Get" Id="{8730e2ad-95af-4d21-b2ff-16030f2a32e4}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{22a34560-5dd3-433a-a623-facfe6f59786}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Method Name="MoveLeft" Id="{fe265b98-10b8-4515-b965-65c92a1caac5}" FolderPath="Methods\Private\">
+      <Declaration><![CDATA[METHOD PRIVATE MoveLeft : PVOID
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT bInverseDirection THEN
+	fbInverter.Clockwise := TRUE;
+	fbInverter.CounterClockwise := FALSE;
+ELSE
+	fbInverter.Clockwise := FALSE;
+	fbInverter.CounterClockwise := TRUE;
+END_IF
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="MoveRight" Id="{44308cbb-1430-4ef2-a87f-8038ca6f2e39}" FolderPath="Methods\Private\">
+      <Declaration><![CDATA[METHOD PRIVATE MoveRight : PVOID
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT bInverseDirection THEN
+	fbInverter.Clockwise := FALSE;
+	fbInverter.CounterClockwise := TRUE;
+ELSE
+	fbInverter.Clockwise := TRUE;
+	fbInverter.CounterClockwise := FALSE;
+END_IF
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="MoveStop" Id="{538ec886-04c2-4588-8ae9-72d461efae5f}" FolderPath="Methods\Private\">
+      <Declaration><![CDATA[METHOD PRIVATE MoveStop : PVOID
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[fbInverter.Clockwise := FALSE;
+fbInverter.CounterClockwise := FALSE;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Positioning" Id="{bcdd161b-7b3c-4957-924d-d96ec2794d7a}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD Positioning : BOOL
+VAR_INPUT
+	StartButton				: BOOL;
+	TargetAxis				: REAL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="FB_Arm">
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Arm.Analog.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Arm.Analog.Set">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Arm.DelayTimer.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Arm.DelayTimer.Set">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Arm.HighSpeedHz.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Arm.HighSpeedHz.Set">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Arm.Homing">
+      <LineId Id="5" Count="0" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="25" Count="8" />
+      <LineId Id="24" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="45" Count="30" />
+      <LineId Id="13" Count="1" />
+      <LineId Id="76" Count="9" />
+      <LineId Id="15" Count="1" />
+      <LineId Id="86" Count="9" />
+      <LineId Id="17" Count="1" />
+      <LineId Id="96" Count="10" />
+      <LineId Id="19" Count="1" />
+      <LineId Id="107" Count="10" />
+      <LineId Id="21" Count="1" />
+      <LineId Id="118" Count="1" />
+      <LineId Id="23" Count="0" />
+      <LineId Id="120" Count="0" />
+      <LineId Id="10" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Arm.HzToRawRatio.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Arm.HzToRawRatio.Set">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Arm.Jogging">
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Arm.LowSpeedHz.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Arm.LowSpeedHz.Set">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Arm.MoveLeft">
+      <LineId Id="13" Count="1" />
+      <LineId Id="16" Count="1" />
+      <LineId Id="20" Count="0" />
+      <LineId Id="19" Count="0" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="12" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Arm.MoveRight">
+      <LineId Id="9" Count="3" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="13" Count="1" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Arm.MoveStop">
+      <LineId Id="6" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Arm.Positioning">
+      <LineId Id="5" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

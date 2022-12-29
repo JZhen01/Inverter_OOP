@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="FB_Sensor" Id="{7ec15521-0f0e-4f12-94c5-2010fd0de13e}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_Sensor
+VAR
+	bDetect					AT %I* : BOOL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Folder Name="Properties" Id="{56f5811e-5adc-4989-b537-50172fa88340}" />
+    <Property Name="Detect" Id="{c3635880-1a9c-40a8-b0d7-30611628ef17}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY Detect : BOOL]]></Declaration>
+      <Get Name="Get" Id="{eee2ea72-2eef-45ca-946e-39a6b9e92f97}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Detect := bDetect;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <LineIds Name="FB_Sensor">
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Sensor.Detect.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

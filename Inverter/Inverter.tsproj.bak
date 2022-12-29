@@ -1,0 +1,157 @@
+<?xml version="1.0"?>
+<TcSmProject xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4024.35">
+	<Project ProjectGUID="{37047DE5-4FC6-4B52-B352-26E0029A6BBC}" Target64Bit="true" ShowHideConfigurations="#x106">
+		<System>
+			<Tasks>
+				<Task Id="3" Priority="20" CycleTime="100000" AmsPort="350" AdtTasks="true">
+					<Name>PlcTask</Name>
+				</Task>
+				<Task Id="4" Priority="21" CycleTime="100000" AmsPort="351" AdtTasks="true">
+					<Name>PlcTask1</Name>
+				</Task>
+			</Tasks>
+		</System>
+		<Plc>
+			<Project GUID="{77DFC931-7029-4931-9B81-277B05DC4678}" Name="MachineA" PrjFilePath="MachineA\MachineA.plcproj" TmcFilePath="MachineA\MachineA.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="MachineA\MachineA.tmc" TmcHash="{D082C723-F815-41AC-40DA-4E252C32279F}">
+					<Name>MachineA Instance</Name>
+					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
+					<Vars VarGrpType="1">
+						<Name>PlcTask Inputs</Name>
+						<Var>
+							<Name>MAIN.fbMachine.fbArm.fbInverter.rAnalogPV</Name>
+							<Type>REAL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.fbMachine.fbArm.fbInverter.rAxisPV</Name>
+							<Type>REAL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.fbMachine.fbArm.fbFrontSensor.bDetect</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.fbMachine.fbArm.fbHomeSensor.bDetect</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.fbMachine.fbArm.fbRearSensor.bDetect</Name>
+							<Type>BOOL</Type>
+						</Var>
+					</Vars>
+					<Vars VarGrpType="2" AreaNo="1">
+						<Name>PlcTask Outputs</Name>
+						<Var>
+							<Name>MAIN.fbMachine.fbArm.fbInverter.rAnalogSV</Name>
+							<Type>REAL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.fbMachine.fbArm.fbInverter.rAxisSV</Name>
+							<Type>REAL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.fbMachine.fbArm.fbInverter.bClockwise</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.fbMachine.fbArm.fbInverter.bCounterClockwise</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.fbMachine.fbArm.fbInverter.rAccelerationSV</Name>
+							<Type>REAL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.fbMachine.fbArm.fbInverter.rDecelerationSV</Name>
+							<Type>REAL</Type>
+						</Var>
+					</Vars>
+					<Contexts>
+						<Context>
+							<Id NeedCalleeCall="true">0</Id>
+							<Name>PlcTask</Name>
+							<ManualConfig>
+								<OTCID>#x02010030</OTCID>
+							</ManualConfig>
+							<Priority>20</Priority>
+							<CycleTime>10000000</CycleTime>
+						</Context>
+					</Contexts>
+					<TaskPouOids>
+						<TaskPouOid Prio="20" OTCID="#x08502001"/>
+					</TaskPouOids>
+				</Instance>
+			</Project>
+			<Project GUID="{4769C26A-2D56-48C6-9639-18F199A5E065}" Name="Simulator" PrjFilePath="Simulator\Simulator.plcproj" TmcFilePath="Simulator\Simulator.tmc" ReloadTmc="true" AmsPort="852" FileArchiveSettings="#x000e" SymbolicMapping="true">
+				<Instance Id="#x08502040" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="Simulator\Simulator.tmc" TmcHash="{B6216019-6C19-79D6-1AA1-2D0815707147}">
+					<Name>Simulator Instance</Name>
+					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
+					<Vars VarGrpType="1">
+						<Name>PlcTask Inputs</Name>
+						<Var>
+							<Name>MAIN.bClockwise</Name>
+							<Comment><![CDATA[rAxisSV					AT %I* : REAL;]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.rAnalogSV</Name>
+							<Comment><![CDATA[rAnalogPV				AT %Q* : REAL;]]></Comment>
+							<Type>REAL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.bCounterClockwise</Name>
+							<Type>BOOL</Type>
+						</Var>
+					</Vars>
+					<Vars VarGrpType="2" AreaNo="1">
+						<Name>PlcTask Outputs</Name>
+						<Var>
+							<Name>MAIN.bFrontSensor</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.bHomeSensor</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.bRearSensor</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.rAxisPV</Name>
+							<Type>REAL</Type>
+						</Var>
+					</Vars>
+					<Contexts>
+						<Context>
+							<Id NeedCalleeCall="true">0</Id>
+							<Name>PlcTask</Name>
+							<ManualConfig>
+								<OTCID>#x02010040</OTCID>
+							</ManualConfig>
+							<Priority>21</Priority>
+							<CycleTime>10000000</CycleTime>
+						</Context>
+					</Contexts>
+					<TaskPouOids>
+						<TaskPouOid Prio="21" OTCID="#x08502041"/>
+					</TaskPouOids>
+				</Instance>
+			</Project>
+		</Plc>
+		<Io/>
+	</Project>
+	<Mappings>
+		<MappingInfo Identifier="{08502001-2041-0850-0020-500840205008}" Id="#x02030010" Watchdog="04000000040000000400000004000000"/>
+		<OwnerA Name="TIPC^MachineA^MachineA Instance">
+			<OwnerB Name="TIPC^Simulator^Simulator Instance">
+				<Link VarA="PlcTask Inputs^MAIN.fbMachine.fbArm.fbFrontSensor.bDetect" VarB="PlcTask Outputs^MAIN.bFrontSensor"/>
+				<Link VarA="PlcTask Inputs^MAIN.fbMachine.fbArm.fbHomeSensor.bDetect" VarB="PlcTask Outputs^MAIN.bHomeSensor"/>
+				<Link VarA="PlcTask Inputs^MAIN.fbMachine.fbArm.fbRearSensor.bDetect" VarB="PlcTask Outputs^MAIN.bRearSensor"/>
+				<Link VarA="PlcTask Outputs^MAIN.fbMachine.fbArm.fbInverter.bClockwise" VarB="PlcTask Inputs^MAIN.bClockwise"/>
+				<Link VarA="PlcTask Outputs^MAIN.fbMachine.fbArm.fbInverter.bCounterClockwise" VarB="PlcTask Inputs^MAIN.bCounterClockwise"/>
+				<Link VarA="PlcTask Outputs^MAIN.fbMachine.fbArm.fbInverter.rAnalogSV" VarB="PlcTask Inputs^MAIN.rAnalogSV"/>
+			</OwnerB>
+		</OwnerA>
+	</Mappings>
+</TcSmProject>

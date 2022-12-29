@@ -1,0 +1,133 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="FB_Inverter" Id="{37e3d66b-57d4-4179-a392-a5c4f3d33ef4}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_Inverter
+VAR
+	rAnalogPV				AT %I* : REAL;
+	rAnalogSV				AT %Q* : REAL;
+	
+	rAxisPV					AT %I* : REAL;
+	rAxisSV					AT %Q* : REAL;
+	
+	bClockwise				AT %Q* : BOOL;
+	bCounterClockwise		AT %Q* : BOOL;
+	
+	rAccelerationSV			AT %Q* : REAL;
+	rDecelerationSV			AT %Q* : REAL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Folder Name="Properties" Id="{1ffefa29-5b6e-4fc5-8118-b43e9a331404}" />
+    <Property Name="Acceleration" Id="{9cf56834-fa69-4991-b921-6c8e41183fb9}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY Acceleration : REAL]]></Declaration>
+      <Set Name="Set" Id="{8f5976f1-d962-43c3-bbe3-50e973b22eae}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[rAccelerationSV := Acceleration;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="Analog" Id="{05c77672-fafb-457b-8eaf-1b3adc177bf0}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY Analog : REAL]]></Declaration>
+      <Get Name="Get" Id="{7d6de675-1534-4c29-b0d6-ec3841349601}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Analog := rAnalogPV;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{2bba6512-491b-4b3a-85b5-4ab6a5a68d62}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[rAnalogSV := Analog;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="Axis" Id="{74ff5bf7-a994-484d-8cd3-86a2cf109568}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY Axis : REAL]]></Declaration>
+      <Get Name="Get" Id="{48e15fdf-c762-4035-85bf-551b24084ba3}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Axis := rAxisPV;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{a5c8e587-9029-42be-bb55-3a9e5a33a418}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[rAxisSV := Axis;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="Clockwise" Id="{74f5a62b-e48d-4e1f-ac8f-224de374f152}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY Clockwise : BOOL]]></Declaration>
+      <Set Name="Set" Id="{6c39081f-0bc3-4a56-831a-ab8752cc3397}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[bClockwise := Clockwise;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="CounterClockwise" Id="{e177ea8f-fb6e-495f-95bc-a19714d4ff59}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY CounterClockwise : BOOL]]></Declaration>
+      <Set Name="Set" Id="{661ce01c-de9f-4257-968b-3a7899fa3ffd}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[bCounterClockwise := CounterClockwise;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="Deceleration" Id="{5823a26c-8cd5-4bcf-a9c2-278ac47f6515}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY Deceleration : REAL]]></Declaration>
+      <Set Name="Set" Id="{30efd391-e70d-43fe-98a4-941953300e96}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[rDecelerationSV := Deceleration;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <LineIds Name="FB_Inverter">
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Inverter.Acceleration.Set">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Inverter.Analog.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Inverter.Analog.Set">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Inverter.Axis.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Inverter.Axis.Set">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Inverter.Clockwise.Set">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Inverter.CounterClockwise.Set">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Inverter.Deceleration.Set">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

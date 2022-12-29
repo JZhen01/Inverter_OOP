@@ -1,0 +1,65 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="MAIN" Id="{769b495a-5390-461e-8f3b-9856b65e90bb}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM MAIN
+VAR
+	bFrontSensor			AT %Q* : BOOL;
+	bHomeSensor				AT %Q* : BOOL;
+	bRearSensor				AT %Q* : BOOL;
+	
+	//rAnalogPV				AT %Q* : REAL;
+	rAnalogSV				AT %I* : REAL;
+	
+	rAxisPV					AT %Q* : REAL;
+	//rAxisSV					AT %I* : REAL;
+	
+	bClockwise				AT %I* : BOOL;
+	bCounterClockwise		AT %I* : BOOL;
+	
+	//rAccelerationSV			AT %I* : REAL;
+	//rDecelerationSV			AT %I* : REAL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF rAxisPV > -10 AND rAxisPV < -9 THEN
+	bFrontSensor := TRUE;
+ELSE
+	bFrontSensor := FALSE;
+END_IF
+
+IF rAxisPV > 9 AND rAxisPV < 10 THEN
+	bHomeSensor := TRUE;
+ELSE
+	bHomeSensor := FALSE;
+END_IF
+
+IF rAxisPV > 59 AND rAxisPV < 60 THEN
+	bRearSensor := TRUE;
+ELSE
+	bRearSensor := FALSE;
+END_IF
+
+
+IF bClockwise THEN
+	rAxisPV := rAxisPV - rAnalogSV;
+ELSIF bCounterClockwise THEN
+	rAxisPV := rAxisPV + rAnalogSV;
+END_IF]]></ST>
+    </Implementation>
+    <LineIds Name="MAIN">
+      <LineId Id="2" Count="0" />
+      <LineId Id="24" Count="0" />
+      <LineId Id="26" Count="1" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="29" Count="4" />
+      <LineId Id="28" Count="0" />
+      <LineId Id="35" Count="4" />
+      <LineId Id="34" Count="0" />
+      <LineId Id="41" Count="1" />
+      <LineId Id="40" Count="0" />
+      <LineId Id="43" Count="0" />
+      <LineId Id="45" Count="1" />
+      <LineId Id="44" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

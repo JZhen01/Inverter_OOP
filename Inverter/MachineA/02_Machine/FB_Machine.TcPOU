@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="FB_Machine" Id="{0762e580-feee-46d7-a51d-4d74e4f1fd72}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_Machine
+VAR
+	fbArm				: FB_Arm;
+	
+	(*Button*)
+	btStartHoming		: BOOL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[fbArm.Homing(btStartHoming);
+fbArm.Analog := 1;]]></ST>
+    </Implementation>
+    <LineIds Name="FB_Machine">
+      <LineId Id="9" Count="0" />
+      <LineId Id="17" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>
