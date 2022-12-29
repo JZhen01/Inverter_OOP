@@ -13,15 +13,11 @@
 		</System>
 		<Plc>
 			<Project GUID="{77DFC931-7029-4931-9B81-277B05DC4678}" Name="MachineA" PrjFilePath="MachineA\MachineA.plcproj" TmcFilePath="MachineA\MachineA.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="MachineA\MachineA.tmc" TmcHash="{78A142DB-1DEB-3716-0FEA-40B91206BA12}">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="MachineA\MachineA.tmc" TmcHash="{DCE33CB5-8A27-DAB7-2F7B-434C277BEAF1}">
 					<Name>MachineA Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="1">
 						<Name>PlcTask Inputs</Name>
-						<Var>
-							<Name>MAIN.fbMachine.fbArm.fbInverter.rAnalogPV</Name>
-							<Type>REAL</Type>
-						</Var>
 						<Var>
 							<Name>MAIN.fbMachine.fbArm.fbInverter.rAxisPV</Name>
 							<Type>REAL</Type>
@@ -56,14 +52,6 @@
 						<Var>
 							<Name>MAIN.fbMachine.fbArm.fbInverter.bCounterClockwise</Name>
 							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>MAIN.fbMachine.fbArm.fbInverter.rAccelerationSV</Name>
-							<Type>REAL</Type>
-						</Var>
-						<Var>
-							<Name>MAIN.fbMachine.fbArm.fbInverter.rDecelerationSV</Name>
-							<Type>REAL</Type>
 						</Var>
 					</Vars>
 					<Contexts>
@@ -147,6 +135,7 @@
 			<OwnerB Name="TIPC^Simulator^Simulator Instance">
 				<Link VarA="PlcTask Inputs^MAIN.fbMachine.fbArm.fbFrontSensor.bDetect" VarB="PlcTask Outputs^MAIN.bFrontSensor"/>
 				<Link VarA="PlcTask Inputs^MAIN.fbMachine.fbArm.fbHomeSensor.bDetect" VarB="PlcTask Outputs^MAIN.bHomeSensor"/>
+				<Link VarA="PlcTask Inputs^MAIN.fbMachine.fbArm.fbInverter.rAxisPV" VarB="PlcTask Outputs^MAIN.rAxisPV"/>
 				<Link VarA="PlcTask Inputs^MAIN.fbMachine.fbArm.fbRearSensor.bDetect" VarB="PlcTask Outputs^MAIN.bRearSensor"/>
 				<Link VarA="PlcTask Outputs^MAIN.fbMachine.fbArm.fbInverter.bClockwise" VarB="PlcTask Inputs^MAIN.bClockwise"/>
 				<Link VarA="PlcTask Outputs^MAIN.fbMachine.fbArm.fbInverter.bCounterClockwise" VarB="PlcTask Inputs^MAIN.bCounterClockwise"/>

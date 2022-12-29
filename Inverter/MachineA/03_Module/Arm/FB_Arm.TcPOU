@@ -14,6 +14,7 @@ VAR
 		iHomingState		: INT;
 	bJogging				: BOOL;
 	bPositioning			: BOOL;
+		iPositioningState	: INT;
 	bInverseDirection		: BOOL;
 	
 	(*Parameter*)
@@ -23,9 +24,10 @@ VAR
 	rAnalog					: REAL;
 	tDelayTime				: TIME;
 	
+	rAxisSV					: REAL;
+	rAxisPV					: REAL	:= fbInverter.Axis;
 	(*Others*)
 	fbTon					: TON;
-	
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -35,16 +37,19 @@ END_VAR
       <Folder Name="Private" Id="{cc660ee9-9210-48e9-81f8-4c763841ef9b}" />
     </Folder>
     <Folder Name="Properties" Id="{eab42068-3e20-4616-973f-4bb1dacbffc5}" />
-    <Property Name="DelayTime" Id="{65534ff0-e573-4088-b8c8-3bb4c9fcfef0}" FolderPath="Properties\">
-      <Declaration><![CDATA[PROPERTY DelayTime : TIME]]></Declaration>
-      <Get Name="Get" Id="{9c44c068-a78d-4720-804f-37b3c6acbb6a}">
+    <Property Name="Axis" Id="{ecbc6915-ad31-41c9-a66f-399ab579a352}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY Axis : REAL]]></Declaration>
+      <Get Name="Get" Id="{777e36e1-29fe-4a23-8d61-57902032fcd6}">
         <Declaration><![CDATA[VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[DelayTime := tDelayTime;]]></ST>
+          <ST><![CDATA[Axis := rAxisPV;]]></ST>
         </Implementation>
       </Get>
+    </Property>
+    <Property Name="DelayTime" Id="{65534ff0-e573-4088-b8c8-3bb4c9fcfef0}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY DelayTime : TIME]]></Declaration>
       <Set Name="Set" Id="{d1ec60f5-f1c0-41de-ac22-4ae6939a8cc2}">
         <Declaration><![CDATA[VAR
 END_VAR
@@ -56,14 +61,6 @@ END_VAR
     </Property>
     <Property Name="HighSpeedHz" Id="{76e6d411-69cc-4e13-9c8c-2f07edbc1f2c}" FolderPath="Properties\">
       <Declaration><![CDATA[PROPERTY HighSpeedHz : REAL]]></Declaration>
-      <Get Name="Get" Id="{4d736c52-7cf6-47d7-90e7-32a1fd10f737}">
-        <Declaration><![CDATA[VAR
-END_VAR
-]]></Declaration>
-        <Implementation>
-          <ST><![CDATA[HighSpeedHz := rHighSpeedHz;]]></ST>
-        </Implementation>
-      </Get>
       <Set Name="Set" Id="{2d753281-ce35-4145-9d35-b90edce28f3e}">
         <Declaration><![CDATA[VAR
 END_VAR
@@ -81,18 +78,18 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[CASE iHomingState OF
-	E_HomingState.Idle:
+	E_ArmState.Idle:
 		IF StartButton AND NOT bHoming AND NOT bBusy AND NOT fbHomeSensor.Detect THEN
 			bBusy := TRUE;
 			bHoming := TRUE;
 			
-			iHomingState := E_HomingState.FirstHoming;
+			iHomingState := E_ArmState.FirstState;
 			
 		ELSIF StartButton AND fbHomeSensor.Detect THEN
-			iHomingState := E_HomingState.Done;
+			iHomingState := E_ArmState.Done;
 		END_IF
 	
-	E_HomingState.FirstHoming:
+	E_ArmState.FirstState:
 			fbInverter.Analog := (rHzToRawRatio*rHighSpeedHz);
 		MoveLeft();
 		
@@ -102,7 +99,7 @@ END_VAR
 			fbTon(IN:= TRUE, PT:= tDelayTime);
 			IF fbTon.Q THEN
 				fbTon(IN:= FALSE);
-				iHomingState := E_HomingState.Re;
+				iHomingState := E_ArmState.Redo;
 			END_IF
 			
 		ELSIF fbFrontSensor.Detect THEN
@@ -111,7 +108,7 @@ END_VAR
 			fbTon(IN:= TRUE, PT:= tDelayTime);
 			IF fbTon.Q THEN
 				fbTon(IN:= FALSE);
-				iHomingState := E_HomingState.Reverse;
+				iHomingState := E_ArmState.Reverse;
 			END_IF
 			
 		ELSIF fbRearSensor.Detect THEN
@@ -121,11 +118,11 @@ END_VAR
 			IF fbTon.Q THEN
 				fbTon(IN:= FALSE);
 				bInverseDirection := NOT bInverseDirection;
-				iHomingState := E_HomingState.Inverse;
+				iHomingState := E_ArmState.Inverse;
 			END_IF
 		END_IF
 	
-	E_HomingState.Reverse:
+	E_ArmState.Reverse:
 		MoveRight();
 		
 		IF fbHomeSensor.Detect THEN
@@ -133,11 +130,11 @@ END_VAR
 			fbTon(IN:= TRUE, PT:= tDelayTime);
 			IF fbTon.Q THEN
 				fbTon(IN:= FALSE);
-				iHomingState := E_HomingState.Re;
+				iHomingState := E_ArmState.Redo;
 			END_IF
 		END_IF
 	
-	E_HomingState.Inverse:
+	E_ArmState.Inverse:
 		MoveLeft();
 		
 		IF fbHomeSensor.Detect THEN
@@ -145,11 +142,11 @@ END_VAR
 			fbTon(IN:= TRUE, PT:= tDelayTime);
 			IF fbTon.Q THEN
 				fbTon(IN:= FALSE);
-				iHomingState := E_HomingState.Re;
+				iHomingState := E_ArmState.Redo;
 			END_IF
 		END_IF
 	
-	E_HomingState.Re:
+	E_ArmState.Redo:
 		fbInverter.Analog := (rHzToRawRatio*rLowSpeedHz);
 		MoveLeft();
 		
@@ -158,11 +155,11 @@ END_VAR
 			fbTon(IN:= TRUE, PT:= tDelayTime);
 			IF fbTon.Q THEN
 				fbTon(IN:= FALSE);
-				iHomingState := E_HomingState.SecondHoming;
+				iHomingState := E_ArmState.SecondState;
 			END_IF
 		END_IF
 	
-	E_HomingState.SecondHoming:
+	E_ArmState.SecondState:
 		fbInverter.Analog := (rHzToRawRatio*rLowSpeedHz);
 		MoveRight();
 		IF fbHomeSensor.Detect THEN
@@ -171,28 +168,20 @@ END_VAR
 			fbTon(IN:= TRUE, PT:= tDelayTime);
 			IF fbTon.Q THEN
 				fbTon(IN:= FALSE);
-				iHomingState := E_HomingState.Done;
+				iHomingState := E_ArmState.Done;
 			END_IF
 		END_IF
 	
-	E_HomingState.Done:
+	E_ArmState.Done:
 		bBusy := FALSE;
 		bHoming := FALSE;
-		iHomingState := E_HomingState.Idle;
-	
+		iHomingState := E_ArmState.Idle;
+		Homing := True;
 END_CASE]]></ST>
       </Implementation>
     </Method>
     <Property Name="HzToRawRatio" Id="{5fcb0c32-f4a1-4b6f-b712-f9a3e64d0464}" FolderPath="Properties\">
       <Declaration><![CDATA[PROPERTY HzToRawRatio : REAL]]></Declaration>
-      <Get Name="Get" Id="{f031419e-f86a-4490-b3ae-25bdbfcfc6ad}">
-        <Declaration><![CDATA[VAR
-END_VAR
-]]></Declaration>
-        <Implementation>
-          <ST><![CDATA[HzToRawRatio := rHzToRawRatio;]]></ST>
-        </Implementation>
-      </Get>
       <Set Name="Set" Id="{130a199e-d87e-49c2-a088-74e75792c763}">
         <Declaration><![CDATA[VAR
 END_VAR
@@ -216,14 +205,6 @@ END_VAR
     </Method>
     <Property Name="LowSpeedHz" Id="{725f885a-59ca-404c-885d-76b160c47f3a}" FolderPath="Properties\">
       <Declaration><![CDATA[PROPERTY LowSpeedHz : REAL]]></Declaration>
-      <Get Name="Get" Id="{8730e2ad-95af-4d21-b2ff-16030f2a32e4}">
-        <Declaration><![CDATA[VAR
-END_VAR
-]]></Declaration>
-        <Implementation>
-          <ST><![CDATA[LowSpeedHz := rLowSpeedHz;]]></ST>
-        </Implementation>
-      </Get>
       <Set Name="Set" Id="{22a34560-5dd3-433a-a623-facfe6f59786}">
         <Declaration><![CDATA[VAR
 END_VAR
@@ -283,19 +264,81 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[]]></ST>
+        <ST><![CDATA[CASE iPositioningState OF
+	E_ArmState.Idle:
+		IF StartButton AND NOT bPositioning AND NOT bBusy THEN
+			bBusy := TRUE;
+			bHoming := TRUE;
+			
+			iPositioningState := E_ArmState.FirstState;
+		END_IF
+	
+	E_ArmState.FirstState:
+		IF fbFrontSensor.Detect OR fbFrontSensor.Detect THEN
+			MoveStop();
+			
+			fbTon(IN:= TRUE, PT:= tDelayTime);
+			IF fbTon.Q THEN
+				fbTon(IN:= FALSE);
+				iPositioningState := E_ArmState.Inverse;
+			END_IF
+		ELSE
+			IF REAL_TO_INT(fbInverter.Axis) < REAL_TO_INT(TargetAxis) THEN
+				IF (TargetAxis - fbInverter.Axis) > 10 THEN
+					fbInverter.Analog := (rHzToRawRatio*rHighSpeedHz);
+				ELSE
+					fbInverter.Analog := (rHzToRawRatio*rHighSpeedHz);
+				END_IF
+				MoveLeft();
+				
+			ELSIF REAL_TO_INT(fbInverter.Axis) > REAL_TO_INT(TargetAxis) THEN
+				IF (fbInverter.Axis - TargetAxis) > 10 THEN
+					fbInverter.Analog := (rHzToRawRatio*rHighSpeedHz);
+				ELSE
+					fbInverter.Analog := (rHzToRawRatio*rHighSpeedHz);
+				END_IF
+				MoveRight();
+			
+			ELSE
+				MoveStop();
+				
+				fbTon(IN:= TRUE, PT:= tDelayTime);
+				IF fbTon.Q THEN
+					fbTon(IN:= FALSE);
+					iPositioningState := E_ArmState.Done;
+				END_IF
+			END_IF
+		END_IF
+		
+	E_ArmState.Inverse:
+		MoveLeft();
+		
+		IF fbHomeSensor.Detect THEN
+			MoveStop();
+			fbTon(IN:= TRUE, PT:= tDelayTime);
+			IF fbTon.Q THEN
+				fbTon(IN:= FALSE);
+				iPositioningState := E_ArmState.FirstState;
+			END_IF
+		END_IF
+	
+	E_ArmState.Done:
+		bBusy := FALSE;
+		bPositioning := FALSE;
+		iPositioningState := E_ArmState.Idle;
+		Positioning := TRUE;
+END_CASE
+
+]]></ST>
       </Implementation>
     </Method>
     <LineIds Name="FB_Arm">
       <LineId Id="9" Count="0" />
     </LineIds>
-    <LineIds Name="FB_Arm.DelayTime.Get">
+    <LineIds Name="FB_Arm.Axis.Get">
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="FB_Arm.DelayTime.Set">
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_Arm.HighSpeedHz.Get">
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="FB_Arm.HighSpeedHz.Set">
@@ -322,17 +365,11 @@ END_VAR
       <LineId Id="120" Count="0" />
       <LineId Id="10" Count="0" />
     </LineIds>
-    <LineIds Name="FB_Arm.HzToRawRatio.Get">
-      <LineId Id="2" Count="0" />
-    </LineIds>
     <LineIds Name="FB_Arm.HzToRawRatio.Set">
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="FB_Arm.Jogging">
       <LineId Id="5" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_Arm.LowSpeedHz.Get">
-      <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="FB_Arm.LowSpeedHz.Set">
       <LineId Id="2" Count="0" />
@@ -356,7 +393,40 @@ END_VAR
       <LineId Id="5" Count="0" />
     </LineIds>
     <LineIds Name="FB_Arm.Positioning">
-      <LineId Id="5" Count="0" />
+      <LineId Id="28" Count="0" />
+      <LineId Id="32" Count="1" />
+      <LineId Id="41" Count="0" />
+      <LineId Id="43" Count="2" />
+      <LineId Id="42" Count="0" />
+      <LineId Id="90" Count="0" />
+      <LineId Id="34" Count="1" />
+      <LineId Id="46" Count="0" />
+      <LineId Id="48" Count="0" />
+      <LineId Id="50" Count="3" />
+      <LineId Id="49" Count="0" />
+      <LineId Id="58" Count="0" />
+      <LineId Id="65" Count="6" />
+      <LineId Id="83" Count="0" />
+      <LineId Id="74" Count="8" />
+      <LineId Id="84" Count="0" />
+      <LineId Id="86" Count="0" />
+      <LineId Id="92" Count="0" />
+      <LineId Id="87" Count="2" />
+      <LineId Id="85" Count="0" />
+      <LineId Id="91" Count="0" />
+      <LineId Id="47" Count="0" />
+      <LineId Id="93" Count="0" />
+      <LineId Id="36" Count="0" />
+      <LineId Id="95" Count="8" />
+      <LineId Id="39" Count="0" />
+      <LineId Id="94" Count="0" />
+      <LineId Id="40" Count="0" />
+      <LineId Id="104" Count="1" />
+      <LineId Id="30" Count="0" />
+      <LineId Id="106" Count="0" />
+      <LineId Id="31" Count="0" />
+      <LineId Id="29" Count="0" />
+      <LineId Id="22" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

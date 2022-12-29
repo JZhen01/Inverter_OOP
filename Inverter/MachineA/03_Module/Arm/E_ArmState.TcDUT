@@ -1,17 +1,18 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
-  <DUT Name="E_HomingState" Id="{46dcca8c-b5a3-4d10-8c2c-84e0ab9c23ef}">
+  <DUT Name="E_ArmState" Id="{46dcca8c-b5a3-4d10-8c2c-84e0ab9c23ef}">
     <Declaration><![CDATA[{attribute 'qualified_only'}
 {attribute 'strict'}
-TYPE E_HomingState :
+TYPE E_ArmState :
 (
 	Idle			:= 0,
-	FirstHoming		:= 1,
-	Reverse			:= 11,
-	Inverse			:= 12,
-	Re				:= 2,
-	SecondHoming	:= 3,
-	Done			:= 4
+	FirstState		:= 1,
+	Redo			:= 2,
+	SecondState		:= 3,
+	Done			:= 4,
+	
+	Reverse			:= 5,
+	Inverse			:= 6
 ) := Idle;
 END_TYPE
 ]]></Declaration>
